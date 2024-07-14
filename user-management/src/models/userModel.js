@@ -1,30 +1,35 @@
-const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('../routes/userRoutes');
+const argon2 = require('argon2');
 
-const app = express();
-
-// Middleware
-app.use(express.json());
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/user-management', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('Could not connect to MongoDB', err));
-
-// Routes
-app.use('/api/users', userRoutes);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  try {
+    this.password = await argon2.hash(this.password);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
-module.exports = app;
+// Method to check password
+userSchema.methods.checkPassword = async function(password) {
+  try {
+    return await argon2.verify(this.password, password);
+  } catch (err) {
+    return false;
+  }
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
