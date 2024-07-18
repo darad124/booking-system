@@ -1,8 +1,8 @@
-const express = require('express');
-const { register, login, getProfile } = require('../controllers/userController');
-const authMiddleware = require('../middleware/authMiddleware');
-const { validateRequest, userSchema } = require('../middleware/validationMiddleware');
-const asyncHandler = require('../utils/asyncHandler');
+import express from 'express';
+import { register, login, getProfile } from '../controllers/userController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+import { validateRequest, userSchema } from '../middleware/validationMiddleware.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 const router = express.Router();
 
@@ -96,4 +96,4 @@ router.post('/login', asyncHandler(login));
  */
 router.get('/profile', authMiddleware, asyncHandler(getProfile));
 
-module.exports = router;
+export default router;

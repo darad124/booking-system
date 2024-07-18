@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { AppError } = require('./errorHandler');
+import Joi from 'joi';
+import { AppError } from './errorHandler.js'; 
 
 const validateRequest = (schema) => {
   return (req, res, next) => {
@@ -18,4 +18,4 @@ const userSchema = Joi.object({
   password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 });
 
-module.exports = { validateRequest, userSchema };
+export { validateRequest, userSchema };

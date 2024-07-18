@@ -1,6 +1,12 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const path = require('path');
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// These two lines are necessary to get __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const options = {
   definition: {
@@ -33,6 +39,6 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-module.exports = (app) => {
+export default (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 };

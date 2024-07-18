@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const argon2 = require('argon2');
+import mongoose from 'mongoose';
+import argon2 from 'argon2';
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -32,4 +32,4 @@ userSchema.methods.checkPassword = async function(password) {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;

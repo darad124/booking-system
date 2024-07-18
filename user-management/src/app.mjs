@@ -1,11 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/dbConfig');
-const logger = require('./config/logger');
-const userRoutes = require('./routes/userRoutes');
-const { errorHandler } = require('./middleware/errorHandler');
-const swaggerConfig = require('./config/swaggerConfig');
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import cors from 'cors';
+import { connectDB } from './config/dbConfig.js';
+import logger from './config/logger.js';
+import userRoutes from './routes/userRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import swaggerConfig from './config/swaggerConfig.js';
 
 const app = express();
 
@@ -43,4 +44,4 @@ const startServer = async () => {
 // Call the async function to start the server
 startServer();
 
-module.exports = app;
+export default app;
